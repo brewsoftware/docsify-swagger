@@ -131,9 +131,11 @@ export function install(hook, vm) {
     }
 
     let markdownMap = new Map();
-    swaggerJson.tags.forEach(tag => {
-      markdownMap.set(tag.name, `${h2(tag.name)}\n${paragraph(tag.description)}\n\n`);
-    });
+    if(swaggerJson.tags){
+      swaggerJson.tags.forEach(tag => {
+        markdownMap.set(tag.name, `${h2(tag.name)}\n${paragraph(tag.description)}\n\n`);
+      });
+    }
 
     let apis = swaggerJson.apis;
     for (let index = 0; index < apis.length; index++) {
@@ -141,6 +143,9 @@ export function install(hook, vm) {
       let tag = api.tag;
       let deprecated = api.deprecated;
       let markdown = markdownMap.get(tag);
+      if(!markdown){
+        markdown = '';
+      }
       let summary = api.summary;
       if (deprecated) {
         summary = strikethrough(summary);
